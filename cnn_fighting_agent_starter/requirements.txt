@@ -1,0 +1,8 @@
+# Pinned lightly; adjust per your platform.
+torch
+numpy
+pandas
+matplotlib
+opencv-python
+scikit-learn
+tqdm
