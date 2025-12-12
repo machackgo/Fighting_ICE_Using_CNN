@@ -133,9 +133,12 @@ print("Connected?", bool(ep))
 print("reset ->", dict(ep.reset("P2")))
 print("step  ->", dict(ep.step("FORWARD")))
 PY
-
+---------------------------------------
 cd ~/Documents/cnn_fighting_agent_starter
 source .venv/bin/activate
+
+##  Data & Pipeline 
+
 python src/simulate_matches.py --matches 300 --frames 260 --val_frac 0.15 \
   --train_out data/train.csv --val_out data/val.csv
 
@@ -144,15 +147,22 @@ python src/prepare_from_csv.py --csv data/val.csv   --out data/val.npz
 
 python -c "import numpy as np, collections; y=np.load('data/train.npz')['labels']; print('class counts:', dict(sorted(collections.Counter(y.tolist()).items())))"
 
+## training 
+
 python src/train.py --data data/train.npz --epochs 10 --batch_size 256
 
+## accuracy 
+
 python src/eval.py --data data/val.npz --weights outputs/latest/model.pt
+
+## validation output 
 
 python -u src/sim_eval_agent.py --weights outputs/latest/model.pt --episodes 50
 
 mkdir -p outputs/checkpoints
 cp outputs/latest/model.pt outputs/checkpoints/winrate_baseline.pt
 
+## listen 
 cd ~/Documents/cnn_fighting_agent_starter
 source .venv/bin/activate
 PYTHONPATH=src python -u src/run_fi_agent.py \
@@ -171,8 +181,11 @@ PY
 
 
 
+## To run the game 
 
-
-
+cd ~/Documents/cnn_fighting_agent_starter
+source .venv/bin/activate
+export PYTHONPATH=src
+PYTHONUNBUFFERED=1 python -u src/human_vs_kick_test.py
 
 
